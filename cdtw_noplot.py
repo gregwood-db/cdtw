@@ -37,7 +37,7 @@ import numbers
 # make_patch(<Curve>, <Curve>)
 #   Return a patch constructed from two curves. Takes two curves as inputs.
 #
-# cdtw(<Curve>, <Curve>, interp, r)
+# cdtw(<Curve>, <Curve>, ns, interp, r)
 #   Return the distance between two curves, as computed by the Continuous
 #   Dynamic Time Warping (CDTW) algorithm. Inputs:
 #       - c1: curve 1

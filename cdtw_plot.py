@@ -642,6 +642,21 @@ def text_to_curve(filename):
     return c
 
 
+# Wrapper to add support for no-plot cdtw function
+def cdtw(c1, c2, num_steiner=5, interp=0.3, r=0)
+    """Perform CDTW on two input curves.
+       INPUTS (Defaults):
+        * c1: curve 1
+        * c2: curve 2
+        * num_steiner (5): number of steiners per edge
+        * interp (0.3): Douglas-Peuker epsilon value
+        * r (0): Sekou-Chiba Band width is not supported in cdtw-plot. Use cdtw-noplot instead."""
+
+    d = graph_distance(c1, c2, num_steiner, interp=interp)
+    return d
+
+
+
 # Public wrapper to the Graph distance
 def graph_distance(*args, **kwargs):
     """Either take in 2 curves or a graph, and return the distance of
