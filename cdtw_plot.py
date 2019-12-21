@@ -278,7 +278,7 @@ class Patch:
         xy = np.c_[c_x, c_y]
         poly = Polygon(xy)
         patches.append(poly)
-        p = PatchCollection(patches, alpha=0.4)
+        p = PatchCollection(patches, alpha=0.4, edgecolors=(0, 0, 0, 1))
         ax.set_ybound(min_y - 1, max_y + 1)
         ax.set_xbound(min_x - 1, max_x + 1)
         ax.add_collection(p)
