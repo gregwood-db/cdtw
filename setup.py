@@ -1,5 +1,7 @@
 from setuptools import setup
 
+# Create egg from CDTW code
+
 setup(
     name='cdtw',
     version='',
