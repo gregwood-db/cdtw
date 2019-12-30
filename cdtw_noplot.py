@@ -375,13 +375,14 @@ def cdtw(c1, c2, num_steiner=5, interp=0.3, r=100):
             if (j-r <= i) & (j+r >= i):
                 scb[i, j] = 1
 
-    # loop through patches from bottom right to top left
+    # loop through patches from bottom right to top left along row
     for i in range(h - 1, -1, -1):
 
         for j in range(w - 1, -1, -1):
 
             # if we are outside of the SCB, we can skip this element
             if scb[i, j] == 0:
+                bot_mat[j][0:num_steiner + 2] = np.inf
                 continue
 
             # make current patch with steiners
@@ -422,6 +423,7 @@ def cdtw(c1, c2, num_steiner=5, interp=0.3, r=100):
                     cur.bottom[n].distance = bot_mat[j][n]
                     cur.bottom[n].visited = True
 
+                cur.br.distance = cur.bottom[-1].distance
                 cur.initialize_dist()
                 rgt = cur
 
@@ -437,7 +439,7 @@ def cdtw(c1, c2, num_steiner=5, interp=0.3, r=100):
 
                 rgt = cur
 
-            # set the distance for the current patch
+            # set the distance for left/top nodes of the current patch
             cur.set_distance()
 
             for n in range(0, num_steiner + 2):
