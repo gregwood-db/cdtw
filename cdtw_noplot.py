@@ -48,7 +48,7 @@ import numbers
 #       - ns: optional parameter specifying number of steiner points per edge.
 #         A higher value leads to more accurate distance metrics, but also
 #         more computational overhead. Default=5
-#       - r: Sekou-Chiba Band width. This limits the search domain to a band of
+#       - r: Sakoe-Chiba Band width. This limits the search domain to a band of
 #         width +/- r around the diagonal. In general, max(dist) ~ 2*r. Default=100
 
 # USAGE:
@@ -343,7 +343,7 @@ def cdtw(c1, c2, num_steiner=5, interp=0.3, r=100):
         * c2: curve 2
         * num_steiner (5): number of steiners per edge
         * interp (0.3): Douglas-Peuker epsilon value
-        * r (100): Sekou-Chiba Band width"""
+        * r (100): Sakoe-Chiba Band width"""
 
     if (not isinstance(c1, Curve)) | (not isinstance(c2, Curve)):
         raise ValueError('cdtw takes 2 curves as inputs')
@@ -368,7 +368,7 @@ def cdtw(c1, c2, num_steiner=5, interp=0.3, r=100):
     cur = []
     rgt = []
 
-    # form the sekou-chiba band
+    # form the sakoe-chiba band
     scb = np.zeros((h, w))
     for i in range(0, h):
         for j in range(0, w):

@@ -650,7 +650,7 @@ def cdtw(c1, c2, num_steiner=5, interp=0.3, r=0):
         * c2: curve 2
         * num_steiner (5): number of steiners per edge
         * interp (0.3): Douglas-Peuker epsilon value
-        * r (0): Sekou-Chiba Band width is not supported in cdtw-plot. Use cdtw-noplot instead."""
+        * r (0): Sakoe-Chiba Band width is not supported in cdtw-plot. Use cdtw-noplot instead."""
 
     print("Note: Parameter r={} is not used in cdtw_plot. Use cdtw_noplot.cdtw if required.".format(r))
     d = graph_distance(c1, c2, num_steiner, interp=interp)
