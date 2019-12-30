@@ -22,7 +22,7 @@ Perform CDTW on two curves: `cdtw(c1, c2, num_steiner=N, interp=E, r=R)`
 - `c1` and `c2` are curves, as created by `text_to_curve()`.
 - `num_steiner` is an interpolant factor; N determines the number of points placed along each segment of the manifold. Setting this lower results in faster computation, but less accuracy in results. Default is 5.
 - `interp` is another interpolant factor. This determines the simplication factor of the input curve, according to the Douglas-Peuker algorithm. A higher value for `interp` means the algorithm will run faster, but will be less accurate. Default is 0.3.
-- `r` controls the width of the Sekou-Chiba band applied to the manifold during calculation of the optimal warping path. This essentially sets upper and lower bounds on the distance from the main diagonal. Setting this lower will decrease the time required to calculate the optimal path, but may result in local minima, reducing the accuracy of the algorithm. Default is 100.
+- `r` controls the width of the Sakoe-Chiba band applied to the manifold during calculation of the optimal warping path. This essentially sets upper and lower bounds on the distance from the main diagonal. Setting this lower will decrease the time required to calculate the optimal path, but may result in local minima, reducing the accuracy of the algorithm. Default is 100.
 
 # To-Do
 - Add more methods for data import (ie, allow import from more than just text files)
