@@ -9,7 +9,7 @@ import numbers
 # The cdtw_noplot package includes functions to calculate a manifold between two curves, then use CDTW to calculate the
 # distance across this manifold. Note that this package contains only methods for computing the distance between two
 # curves; if visualization is required, use cdtw_plot instead. This version of the algorithm contains optimizations to
-# avoid computing and storing the entire manifold.
+# avoid computing and storing the entire manifold. As a result, this version is ~O(n).
 #
 # In general, this code requires as inputs text files with two columns, representing the X and Y coordinates of the
 # curves to be compared. More formats will be added in the future. Once the files are converted using text_to_curve(),
