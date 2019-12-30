@@ -643,7 +643,7 @@ def text_to_curve(filename):
 
 
 # Wrapper to add support for no-plot cdtw function
-def cdtw(c1, c2, num_steiner=5, interp=0.3, r=0)
+def cdtw(c1, c2, num_steiner=5, interp=0.3, r=0):
     """Perform CDTW on two input curves.
        INPUTS (Defaults):
         * c1: curve 1
@@ -652,9 +652,9 @@ def cdtw(c1, c2, num_steiner=5, interp=0.3, r=0)
         * interp (0.3): Douglas-Peuker epsilon value
         * r (0): Sekou-Chiba Band width is not supported in cdtw-plot. Use cdtw-noplot instead."""
 
+    print("Note: Parameter r={} is not used in cdtw_plot. Use cdtw_noplot.cdtw if required.".format(r))
     d = graph_distance(c1, c2, num_steiner, interp=interp)
     return d
-
 
 
 # Public wrapper to the Graph distance
