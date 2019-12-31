@@ -8,7 +8,7 @@ import numpy as np
 # The cdtw_fast package includes functions to calculate a manifold between two curves, then use CDTW to calculate the
 # distance across this manifold. Note that this package contains only methods for computing the distance between two
 # curves; if visualization is required, use cdtw_plot instead. This version of the algorithm contains optimizations to
-# avoid computing and storing the entire manifold by using methods similar to the PyPI fastDTW package. As a result,
+# avoid computing and storing the entire manifold by using methods similar to the fastDTW algorithm. As a result,
 # this version is ~O(n).
 #
 # In general, this code requires as inputs text files with two columns, representing the X and Y coordinates of the
@@ -538,7 +538,7 @@ def __fast_cdtw(c1, c2, radius, rounds):
     for r in range(1, rounds):
         curve_rounds.append((curve_rounds[r-1][0].halve(), curve_rounds[r-1][1].halve()))
 
-    for r in range(rounds-1, 0, -1):
+    for r in range(rounds-1, -1, -1):
 
         curr_c1 = curve_rounds[r][0]
         curr_c2 = curve_rounds[r][1]
