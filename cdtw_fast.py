@@ -34,9 +34,6 @@ import numpy as np
 # text_to_curve(filename)
 #   Create a curve from a text file, where column 1 is X and column 2 is Y.
 #
-# make_patch(<Curve>, <Curve>)
-#   Return a patch constructed from two curves. Takes two curves as inputs.
-#
 # fast_cdtw(<Curve>, <Curve>, radius, interp, rounds)
 #   Return the distance between two curves, as computed by the fast Continuous
 #   Dynamic Time Warping (CDTW) algorithm. Inputs:
@@ -340,18 +337,6 @@ def __line_dist(point, line_st, line_end):
                      np.linalg.norm(x2 - x1))
 
 
-# Create a Curve object from a text file containing 2 rows.
-# First column is assumed to be X values, second is Y.
-def text_to_curve(filename):
-    c = Curve([])
-    with open(filename, 'r') as f:
-        next(f)  # skip header line
-        for line in f:
-            n = Node(line.split()[0], line.split()[1])
-            c.add_node(n)
-    return c
-
-
 # Perform CDTW on c1 and c2. Note that in this code, this method should not usually be directly called. Use cdtw_fast
 # instead, as this performs the compaction and projection to leverage the fastDTW method.
 def cdtw(c1, c2, num_steiner=5, mask=None):
@@ -463,23 +448,28 @@ def cdtw(c1, c2, num_steiner=5, mask=None):
 # patch's top-left node, and stores it in a matrix. This can also be visualized to spot-check the warping performance.
 def __make_path(dist_map):
 
+    # initialize variables
     w = np.size(dist_map, 0)
     h = np.size(dist_map, 1)
     i = 0
     j = 0
     path = [(i, j)]
 
+    # loop from (0,0) to (h,w)
     while i <= h and j <= w:
 
+        # edge cases: at the top or bottom of the map
         if i + 1 >= h:
             next_node = (i, j+1)
         elif j + 1 >= w:
             next_node = (i+1, j)
         else:
+            # only possible next nodes are to the right, bottom, and bottom-right
             poss_nodes = [(i+1, j), (i, j+1), (i+1, j+1)]
             node_dists = [dist_map[(i+1, j)], dist_map[(i, j+1)],
                           dist_map[(i+1, j+1)]]
 
+            # find the min distance to the next node and then append
             node_dict = dict(zip(node_dists, poss_nodes))
             next_node = node_dict[min(node_dict)]
 
@@ -496,8 +486,10 @@ def __make_path(dist_map):
 # generate the path that is input. Using a larger r will results in a more accurate warp but more computation.
 def __project_path(path, x_size, y_size, r):
 
+    # form the band to hold the logical map
     new_band = np.zeros((x_size*2, y_size*2))
 
+    # walk through the path and set elements of new_band to 1 according to path
     for (y, x) in path:
 
         if 2 * x - r < 0:
@@ -555,7 +547,21 @@ def __fast_cdtw(c1, c2, radius, rounds):
     return d, dist_map
 
 
-# Main function to perform fast CDTW. This is a wrapper to __fast_cdtw to allow interpolation if desired.
+# -------- MAIN PUBLIC FUNCTIONS -------- #
+
+# Create a Curve object from a text file containing 2 rows.
+# First column is assumed to be X values, second is Y.
+def text_to_curve(filename):
+    c = Curve([])
+    with open(filename, 'r') as f:
+        next(f)  # skip header line
+        for line in f:
+            n = Node(line.split()[0], line.split()[1])
+            c.add_node(n)
+    return c
+
+
+# Main function to perform fastCDTW. This is a wrapper to __fast_cdtw to allow interpolation if desired.
 def fast_cdtw(c1, c2, radius=10, interp=0.3, rounds=4):
 
     if interp > 0:
