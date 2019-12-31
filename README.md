@@ -26,7 +26,7 @@ Perform CDTW on two curves using standard CDTW: `cdtw(c1, c2, num_steiner=N, int
 
 Perform CDTW on two curves using fast CDTW: `cdtw_fast(c1, c2, radius=R, interp=E, rounds=N)`
 - `c1` and `c2` are curves, as created by `text_to_curve()`.
-- `radius` is used to determine the neighborhood when projecting a low-resolution warping path onto a higher-resolution space. See [the original FastDTW paper](https://pdfs.semanticscholar.org/05a2/0cde15e172fc82f32774dd0cf4fe5827cad2.pdf) for more detail.
+- `radius` is used to determine the neighborhood when projecting a low-resolution warping path onto a higher-resolution space. See [the original FastDTW implementation](https://github.com/rmaestre/FastDTW) for more detail.
 - `interp` is another interpolant factor. This determines the simplication factor of the input curve, according to the Douglas-Peuker algorithm. A higher value for `interp` means the algorithm will run faster, but will be less accurate. Default is 0.3.
 - `rounds` determines how many compaction-projection rounds are carried out by the FastCDTW algorithm.
 
