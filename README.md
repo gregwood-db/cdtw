@@ -6,7 +6,7 @@ Continuous Dyamic Time Warping with Python.
 Includes versions that forego plotting libraries, for use on distributed or remote backends.
 
 # Usage
- - Import the appropriate version of the code: if you need to do plotting or visualization, import cdtw-plot. In general, cdtw-noplot and cdtw_fast are lighter-weight, include additional optimization, and are MUCH faster, so should be used for any actual comparisons that don't need graphing. `cdtw_noplot` is O(n) in space, but close to O(n^2) in memory. `cdtw_fast` is O(n) in both space and memory, but is less accurate.
+ - Import the appropriate version of the code: if you need to do plotting or visualization, import cdtw-plot. In general, cdtw-noplot and cdtw_fast are lighter-weight, include additional optimization, and are MUCH faster, so should be used for any actual comparisons that don't need graphing. `cdtw_noplot` is O(n) in space, but close to O(n^2) in memory. `cdtw_fast` is O(n) in both space and memory, but can be less accurate. Usually, cdtw_fast is acceptable and much faster.
  - Create a curve from a text file by using `c1 = text_to_curve(text1.txt)`. The format of the file should be two columns with (x,y) coordinates of each point in the curve. Some sample data is included in cdtw/sample-data.
  - Run the comparison of the two curves by using `c_dist = cdtw(c1, c2)` or `c_dist = cdtw_fast(c1, c2)`. 
  - If you are using cdtw-plot, you can also use `c_dist = graph_distance(c1, c2)`. This will create a graph from the two curves, and then compute the distance of this graph. Alternatively, you can explicitly create a graph by calling `g1 = graph_build(c1, c2)`. This will create a graph object, which can be manipulated and viewed at a lower level.
