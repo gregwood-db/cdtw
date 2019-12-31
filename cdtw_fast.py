@@ -552,7 +552,7 @@ def __fast_cdtw(c1, c2, radius, rounds):
             band = __project_path(path, len(curve_rounds[r+1][1]), len(curve_rounds[r+1][0]), radius)
             d, dist_map = cdtw(curr_c1, curr_c2, mask=band)
 
-    return d
+    return d, dist_map
 
 
 # Main function to perform fast CDTW. This is a wrapper to __fast_cdtw to allow interpolation if desired.
@@ -562,6 +562,6 @@ def fast_cdtw(c1, c2, radius=10, interp=0.3, rounds=4):
         c1 = simplify_curve(c1, interp)
         c2 = simplify_curve(c2, interp)
 
-    dist = __fast_cdtw(c1, c2, radius, rounds)
+    dist, dist_map = __fast_cdtw(c1, c2, radius, rounds)
 
     return dist
