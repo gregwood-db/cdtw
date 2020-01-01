@@ -385,7 +385,7 @@ class Graph:
                         curr_pct = np.floor(10 * count / total)
                         print('%d percent done...' % (10 * curr_pct))
 
-        p = PatchCollection(patches, alpha=0.4)
+        p = PatchCollection(patches, alpha=0.4, edgecolors=(0, 0, 0, 1))
         # colors = 100*np.random.rand(len(patches))
         # p.set_array(np.array(colors))
         ax.set_ybound(self.min_y - 1, self.max_y + 1)
