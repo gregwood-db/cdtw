@@ -175,7 +175,7 @@ def __make_path(dist_map):
     w = np.size(dist_map, 1)
     i = 0
     j = 0
-    path = [(i, j)]
+    path = [(0, 0)]
 
     # loop from (0,0) to (h,w)
     while i < h and j < w:
@@ -212,7 +212,7 @@ def __project_path(path, x_size, y_size, r):
     new_band = np.zeros((x_size*2, y_size*2))
 
     # walk through the path and set elements of new_band to 1 according to path
-    for (y, x) in path:
+    for (x, y) in path:
 
         if 2 * x - r < 0:
             x_start = 0
