@@ -171,14 +171,14 @@ def _cdtw(c1, c2, num_steiner=5, mask=None):
 def __make_path(dist_map):
 
     # initialize variables
-    w = np.size(dist_map, 0)
-    h = np.size(dist_map, 1)
+    h = np.size(dist_map, 0)
+    w = np.size(dist_map, 1)
     i = 0
     j = 0
     path = [(i, j)]
 
     # loop from (0,0) to (h,w)
-    while i <= h and j <= w:
+    while i < h and j < w:
 
         # edge cases: at the top or bottom of the map
         if i + 1 >= h:
