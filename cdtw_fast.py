@@ -310,7 +310,7 @@ def text_to_curve(filename):
 
 
 # Main function to perform fastCDTW. This is a wrapper to __fast_cdtw to allow interpolation if desired.
-def fast_cdtw(c1, c2, radius=10, interp=0.3, rounds=4):
+def cdtw_fast(c1, c2, radius=10, interp=0.3, rounds=4):
 
     if interp > 0:
         c1 = simplify_curve(c1, interp)
