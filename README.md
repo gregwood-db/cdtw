@@ -11,6 +11,18 @@ Includes tools to visualize data, as well as efficient implementation for raw co
  - Run the comparison of the two curves by using `c_dist = cdtw(c1, c2)` or `c_dist = cdtw_fast(c1, c2)`. 
  - If you are using cdtw-plot, you can also use `c_dist = graph_distance(c1, c2)`. This will create a graph from the two curves, and then compute the distance of this graph. Alternatively, you can explicitly create a graph by calling `g1 = graph_build(c1, c2)`. This will create a graph object, which can be manipulated and viewed at a lower level.
  - To directly view a graph, use `graph_plot(c1, c2)` or `g1.show()`.
+ 
+## Usage example
+```
+import cdtw as cd
+c1 = cd.text_to_curve('sample-data/s001000')
+c2 = cd.text_to_curve('sample-data/s001001')
+c3 = cd.text_to_curve('sample-data/s001f001')
+
+d1 = cd.cdtw_fast(c1, c2)
+d2 = cd.cdtw_fast(c1, c3)
+print("Distance of real signature: {}\nDistance of forged signature: {}".format(d1, d2))
+```
 
 # Important Functions and Parameters (non-graphical)
 (Parameters are similar across cdtw-plot, cdtw_fast and cdtw, but not identical, since the implementations vary slightly, and the graphical requirements are more restrictive. This section will cover parameters only for cdtw).
