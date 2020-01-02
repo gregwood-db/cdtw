@@ -3,7 +3,7 @@
 # cdtw
 Continuous Dyamic Time Warping with Python.
  
-Includes versions that forego plotting libraries, for use on distributed or remote backends.
+Includes tools to visualize data, as well as efficient implementation for raw computation.
 
 # Usage
  - Import the appropriate version of the code: if you need to do plotting or visualization, import cdtw-plot. In general, cdtw-noplot and cdtw_fast are lighter-weight, include additional optimization, and are MUCH faster, so should be used for any actual comparisons that don't need graphing. `cdtw` is O(n) in space, but close to O(n^2) in memory. `cdtw_fast` is O(n) in both space and memory, but can be less accurate. Usually, cdtw_fast is acceptable and much faster.
