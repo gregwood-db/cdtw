@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='cdtw',
-    version='0.3.0',
+    version='0.3.1',
     packages=[''],
     url='https://github.com/gregwood-db/cdtw',
     license='',
