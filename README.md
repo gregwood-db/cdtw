@@ -32,15 +32,15 @@ Create curve objects for comparison: `text_to_curve(filename)`
 
 Perform CDTW on two curves using standard CDTW: `cdtw(c1, c2, num_steiner=N, interp=E, r=R)`
 - `c1` and `c2` are curves, as created by `text_to_curve()`.
-- `num_steiner` is an interpolant factor; N determines the number of points placed along each segment of the manifold. Setting this lower results in faster computation, but less accuracy in results. Default is 5.
-- `interp` is another interpolant factor. This determines the simplication factor of the input curve, according to the Douglas-Peuker algorithm. A higher value for `interp` means the algorithm will run faster, but will be less accurate. Default is 0.3.
+- `interp` is an interpolant factor. This determines the simplication factor of the input curve, according to the Douglas-Peuker algorithm. A higher value for `interp` means the algorithm will run faster, but will be less accurate. Default is 0.3.
+- `num_steiner` is another interpolant factor; N determines the number of points placed along each segment of the manifold. Setting this lower results in faster computation, but less accuracy in results. Default is 5.
 - `r` controls the width of the Sakoe-Chiba band applied to the manifold during calculation of the optimal warping path. This essentially sets upper and lower bounds on the distance from the main diagonal. Setting this lower will decrease the time required to calculate the optimal path, but may result in local minima, reducing the accuracy of the algorithm. Default is 100.
 
-Perform CDTW on two curves using fast CDTW: `cdtw_fast(c1, c2, radius=R, interp=E, rounds=N)`
+Perform CDTW on two curves using fast CDTW: `cdtw_fast(c1, c2, interp=E, num_steiner=S, radius=E, rounds=N)`
 - `c1` and `c2` are curves, as created by `text_to_curve()`.
+- `interp` and `num_steiner` are the same as above.
 - `radius` is used to determine the neighborhood when projecting a low-resolution warping path onto a higher-resolution space. See [the original FastDTW implementation](https://github.com/rmaestre/FastDTW) for more detail.
-- `interp` is another interpolant factor. This determines the simplication factor of the input curve, according to the Douglas-Peuker algorithm. A higher value for `interp` means the algorithm will run faster, but will be less accurate. Default is 0.3.
-- `rounds` determines how many compaction-projection rounds are carried out by the FastCDTW algorithm.
+- `rounds` determines how many compaction-projection-refinement rounds are carried out by the FastCDTW algorithm.
 
 # To-Do
 - Add more methods for data import (ie, allow import from more than just text files)
