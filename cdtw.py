@@ -118,9 +118,9 @@ def __make_path(dist_map):
     return path
 
 
-# Project a warping path onto a high-resolution space, and return the mask based on this path and the radius r. This
-# function will return a matrix double of size 2*m, 2*n, where m and n are the lengths of the two curves used to
-# generate the path that is input. Using a larger r will results in a more accurate warp but more computation.
+# Project a warping path onto a higher-resolution space, and return the mask based on this path and the radius r. This
+# function will return a matrix of size 2*m, 2*n, where m and n are the lengths of the two curves used to
+# generate the path that is the input. Using a larger r will results in a more accurate warp but more computation.
 def __project_path(path, x_size, y_size, r):
 
     # form the band to hold the logical map
@@ -155,8 +155,8 @@ def __project_path(path, x_size, y_size, r):
 
 
 # Internal function that builds the compacted curve objects, then walks through them in order. It starts from the most
-# compact curve (last in the list), and uses the path from this to generate the valid warping band for the next most
-# compact curve, and so on, until it reaches the original inputs.
+# compact curve (last in the list), and uses the path from this to generate the valid warping mask for the next most
+# compact curve, and so on, until it reaches the original input.
 def __cdtw_fast(c1, c2, radius, rounds, num_steiner):
 
     curve_rounds = [(c1, c2)]
@@ -352,10 +352,12 @@ def cdtw(c1, c2, interp=0.3, num_steiner=5, r=100):
         scb = np.ones((h, w))
     else:
         scb = np.zeros((h, w))
-        for i in range(0, h):
-            for j in range(0, w):
-                if (j-r <= i) & (j+r >= i):
-                    scb[i, j] = 1
+        scale = h / w
+        for i in range(0, w):
+            h_fill_center = int(np.ceil(i * scale))
+            h_fill_upper = min(h, h_fill_center + r)
+            h_fill_lower = max(0, h_fill_center - r)
+            scb[h_fill_lower:h_fill_upper, i] = 1
 
     dist, dist_map = _cdtw(c1, c2, mask=scb, num_steiner=num_steiner)
 
