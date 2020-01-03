@@ -362,7 +362,7 @@ def cdtw(c1, c2, interp=0.3, num_steiner=5, r=100):
     return dist
 
 
-# Main function to perform fastCDTW. This is a wrapper to __fast_cdtw.
+# Main function to perform fastCDTW. This is a wrapper to __cdtw_fast.
 def cdtw_fast(c1, c2, interp=0.3, num_steiner=5, radius=10, rounds=4):
     """
     Perform fast CDTW on two input curves.
