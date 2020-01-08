@@ -196,15 +196,24 @@ def __cdtw_fast(c1, c2, radius, rounds, num_steiner):
     return d, dist_map
 
 
-# Perform CDTW on c1 and c2
 def _cdtw(c1, c2, mask, num_steiner=5):
-    """Perform CDTW on two input curves.
-       INPUTS (Defaults):
-        * c1: curve 1
-        * c2: curve 2
-        * mask: a 2*n numpy array where [0,:] is the upper bound of the warping region
-          and [1, :] os the lower bound. All elements must be integer tuples representing coordinates.
-        * num_steiner (5): number of steiners per edge"""
+    """
+    Perform CDTW on two input curves. This is an internal function only.
+
+    Take two curves as arguments and perform CDTW on them. This will compute the warping distance for any valid node
+    (i.e., nodes that are included in the mask matrix).
+
+    Parameters:
+    c1 (cdtw.Curve): the first curve to perform CDTW on.
+    c2 (cdtw.Curve): the second curve to perform CDTW on.
+    mask (np.ndarray): a 2*n array that holds the upper and lower bounds for the valid warping region.
+    num_steriners(int): the number of interpolating points per edge in the manifold. Higher is more accurate.
+    r(int): the width of the Sakoe-Chiba band. Higher is more accurate.
+
+    Returns:
+    dist (float): the distance between the two curves.
+    dist_map (dict): a dict containing the warping distance for each node, i.e., {(i,j): dist}
+    """
 
     if (not isinstance(c1, Curve)) | (not isinstance(c2, Curve)):
         raise ValueError('cdtw takes 2 curves as inputs')
