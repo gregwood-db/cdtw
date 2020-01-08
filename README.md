@@ -44,4 +44,4 @@ Perform CDTW on two curves using fast CDTW: `cdtw_fast(c1, c2, interp=E, num_ste
 
 # To-Do
 - Add more methods for data import (ie, allow import from more than just text files)
-- Improve space complexity to be truly O(n)- current implementation stores full n * m distance matrix
+- Add more plotting methods for cdtw-plot
