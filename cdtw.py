@@ -32,7 +32,7 @@ from cdtw_classes import Node, Curve, Patch
 # In general, a workflow will look like this:
 #   c1 = text_to_curve(text1.txt)
 #   c2 = text_to_curve(text2.txt)
-#   c_dist = cdtw(c1, c2, 5, 0.5, 100)
+#   c_dist = cdtw(c1, c2)
 
 
 # ------------------- Helper Functions ------------------- #
