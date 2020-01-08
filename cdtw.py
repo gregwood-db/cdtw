@@ -124,7 +124,8 @@ def __make_path(dist_map):
 def __project_path(path, x_size, y_size, r):
 
     # form the band to hold the logical map
-    new_band = np.zeros((x_size*2, y_size*2))
+    mask = np.zeros((2, y_size*2))
+    mask[1, :] = np.inf
 
     # walk through the path and set elements of new_band to 1 according to path
     for (x, y) in path:
@@ -149,9 +150,14 @@ def __project_path(path, x_size, y_size, r):
             y_start = 2 * y - r
             y_end = 2 * y + r
 
-        new_band[x_start:x_end, y_start:y_end] = 1
+        for i in range(y_start, y_end):
+            if mask[0, i] < x_end:
+                mask[0, i] = x_end
 
-    return new_band
+            if mask[1, i] > x_start:
+                mask[1, i] = x_start
+
+    return mask
 
 
 # Internal function that builds the compacted curve objects, then walks through them in order. It starts from the most
@@ -171,12 +177,16 @@ def __cdtw_fast(c1, c2, radius, rounds, num_steiner):
 
         curr_c1 = curve_rounds[r][0]
         curr_c2 = curve_rounds[r][1]
+        h = len(curr_c2)
+        w = len(curr_c1)
 
-        if len(curr_c1) < min_size or len(curr_c2) < min_size:
-            mask = np.ones((len(c2), len(c1)))
+        if w < min_size or h < min_size:
+            mask = np.zeros((2, w))
+            mask[0, :] = h-1
             d, dist_map = _cdtw(curr_c1, curr_c2, mask=mask)
         elif dist_map is None:
-            mask = np.ones((len(c2), len(c1)))
+            mask = np.zeros((2, w))
+            mask[0, :] = h - 1
             d, dist_map = _cdtw(curr_c1, curr_c2, mask=mask)
         else:
             path = __make_path(dist_map)
@@ -192,7 +202,8 @@ def _cdtw(c1, c2, mask, num_steiner=5):
        INPUTS (Defaults):
         * c1: curve 1
         * c2: curve 2
-        * mask: a logical 0/1 mask representing the valid warping region.
+        * mask: a 2*n numpy array where [0,:] is the upper bound of the warping region
+          and [1, :] os the lower bound. All elements must be integer tuples representing coordinates.
         * num_steiner (5): number of steiners per edge"""
 
     if (not isinstance(c1, Curve)) | (not isinstance(c2, Curve)):
@@ -214,7 +225,9 @@ def _cdtw(c1, c2, mask, num_steiner=5):
         for j in range(w - 1, -1, -1):
 
             # if we are outside of the provided mask, we can skip this element
-            if mask[i, j] == 0:
+            mask_upper = mask[0, j]
+            mask_lower = mask[1, j]
+            if i < mask_lower or i > mask_upper:
                 bot_mat[j][0:num_steiner + 2] = np.inf
                 continue
 
@@ -250,7 +263,7 @@ def _cdtw(c1, c2, mask, num_steiner=5):
                 rgt = cur
 
             # case where we are on the edge of the SCB
-            elif mask[i, j + 1] == 0:
+            elif i > mask[0, j+1] or i < mask[1, j+1]:
                 # set current bottom to previous top
                 for n in range(0, num_steiner + 2):
                     cur.bottom[n].distance = bot_mat[j][n]
@@ -349,15 +362,17 @@ def cdtw(c1, c2, interp=0.3, num_steiner=5, r=100):
     h = len(c2)
     w = len(c1)
     if r == 0:
-        scb = np.ones((h, w))
+        scb = np.zeros((2, w))
+        scb[0, :] = h
     else:
-        scb = np.zeros((h, w))
+        scb = np.zeros((2, w))
         scale = h / w
         for i in range(0, w):
             h_fill_center = int(np.ceil(i * scale))
             h_fill_upper = min(h, h_fill_center + r)
             h_fill_lower = max(0, h_fill_center - r)
-            scb[h_fill_lower:h_fill_upper, i] = 1
+            scb[0, i] = h_fill_upper
+            scb[1, i] = h_fill_lower
 
     dist, dist_map = _cdtw(c1, c2, mask=scb, num_steiner=num_steiner)
 
