@@ -86,8 +86,8 @@ def __line_dist(point, line_st, line_end):
 def __make_path(dist_map):
 
     # initialize variables
-    h = np.size(dist_map, 0)
-    w = np.size(dist_map, 1)
+    h = max([x[0] for x in dist_map.keys()])
+    w = max([x[1] for x in dist_map.keys()])
     i = 0
     j = 0
     path = [(0, 0)]
@@ -103,8 +103,8 @@ def __make_path(dist_map):
         else:
             # only possible next nodes are to the right, bottom, and bottom-right
             poss_nodes = [(i+1, j), (i, j+1), (i+1, j+1)]
-            node_dists = [dist_map[(i+1, j)], dist_map[(i, j+1)],
-                          dist_map[(i+1, j+1)]]
+            node_dists = [dist_map.get((i+1, j), np.inf), dist_map.get((i, j+1), np.inf),
+                          dist_map.get((i+1, j+1), np.inf)]
 
             # find the min distance to the next node and then append
             node_dict = dict(zip(node_dists, poss_nodes))
@@ -216,8 +216,8 @@ def _cdtw(c1, c2, mask, num_steiner=5):
     cur = []
     rgt = []
 
-    # hold dist for each patch; used for projections to more compact space
-    dist_map = np.full((h, w), np.inf)
+    # hold dist for each valid patch; used for projections to more compact space
+    dist_map = {}
 
     # loop through patches from bottom right to top left along row
     for i in range(h - 1, -1, -1):
@@ -291,7 +291,8 @@ def _cdtw(c1, c2, mask, num_steiner=5):
             for n in range(0, num_steiner + 2):
                 bot_mat[j][n] = cur.top[n].distance
 
-            dist_map[i, j] = cur.tl.distance
+            # update the dist_map dict with the current node's distance
+            dist_map[(i, j)] = cur.tl.distance
 
     # final distance is the top left node distance
     return cur.tl.distance, dist_map
