@@ -43,5 +43,6 @@ Perform CDTW on two curves using fast CDTW: `cdtw_fast(c1, c2, interp=E, num_ste
 - `rounds` determines how many compaction-projection-refinement rounds are carried out by the FastCDTW algorithm.
 
 # To-Do
-- Add more methods for data import (ie, allow import from more than just text files)
+- Add more methods for data import
 - Add more plotting methods for cdtw-plot
+- Explore further efficiency in execution
