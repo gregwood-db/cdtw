@@ -20,6 +20,15 @@ from cdtw_classes import Node, Curve, Patch
 # text_to_curve(filename)
 #   Create a curve from a text file, where column 1 is X and column 2 is Y.
 #
+# df_to_curve(filename)
+#   Create a curve from a pandas or pyspark dataframe.
+#
+# list_to_curve(filename)
+#   Create a curve from a list of numbers representing X and Y.
+#
+# list_to_curve(filename)
+#   Create a curve from a numpy array representing X and Y.
+#
 # cdtw(c1, c2, ns, interp, r)
 #   Return the distance between two curves, as computed by the Continuous
 #   Dynamic Time Warping (CDTW) algorithm.
@@ -335,6 +344,148 @@ def text_to_curve(filename):
     return c
 
 
+def df_to_curve(df):
+    """
+    Convert a pandas or pyspark dataframe to a cdtw.Curve object.
+
+    Creates a new Curve object from a dataframe containing (x,y) coordinates. The dataframe should be structured as two
+    columns; the first contains the x-coordinates, and the second contains the y-coordinates.
+
+    Parameters:
+    df (dataframe): the dataframe containing the (x,y) coordinates. If df is a pandas dataframe, the first two columns
+    will be used as x and y, respectively. If df is a pyspark dataframe, the x and y columns must be named.
+
+    Returns:
+    c (cdtw.Curve): the curve created from the text file.
+    """
+
+    df_type = type(df).__module__ + type(df).__name__
+
+    # check DF type; must be pandas or pyspark
+    if df_type == "pandas.core.frame.DataFrame":
+        x = df.iloc[:, 0]
+        y = df.iloc[:, 1]
+    elif df_type == "pyspark.sql.dataframe.DataFrame":
+        x = df.select('x').rdd.map(lambda i: i[0]).collect()
+        y = df.select('y').rdd.map(lambda i: i[0]).collect()
+    else:
+        raise ValueError("Dataframe type must be either \
+                        'pandas.core.frame.DataFrame' or 'pyspark.sql.dataframe.DataFrame'")
+
+    # enforce all x,y coords are numbers
+    if not all(isinstance(i, numbers.Number) for i in x):
+        raise ValueError("All x-values must be numbers.")
+    elif not all(isinstance(i, numbers.Number) for i in y):
+        raise ValueError("All y-values must be numbers.")
+
+    # create the curve object
+    c = Curve([])
+
+    for x, y in zip(x, y):
+        n = Node(x, y)
+        c.add_node(n)
+
+    return c
+
+
+def list_to_curve(*args):
+    """
+    Convert a list of numbers to a cdtw.Curve object.
+
+    Creates a new Curve object from a list containing (x,y) coordinates. This function can either take two lists (ie
+    separate x and y) or a single array where the first list is x and the second list is y.
+
+    Parameters:
+    x (list): the list containing x coordinates (floats)
+    y (list): the list containing y coordinates (floats)
+     - OR -
+    xy_list (list): the array containing the (x,y) coordinates (floats).
+
+    Returns:
+    c (cdtw.Curve): the curve created from the text file.
+    """
+
+    # enforce all inputs are lists
+    if not all(isinstance(i, list) for i in args):
+        raise ValueError("All inputs must be lists.")
+
+    len_args = len(args)
+
+    # check DF type; must be pandas or pyspark
+    if len_args == 2:
+        x = args[0]
+        y = args[1]
+    elif len_args == 1:
+        x = args[0][0]
+        y = args[0][1]
+    else:
+        raise ValueError("Input must either be two lists of x and y, or a single list containing both.")
+
+    # enforce all x,y coords are numbers
+    if not all(isinstance(i, numbers.Number) for i in x):
+        raise ValueError("All x-values must be numbers.")
+    elif not all(isinstance(i, numbers.Number) for i in y):
+        raise ValueError("All y-values must be numbers.")
+
+    # create the curve object
+    c = Curve([])
+
+    for x, y in zip(x, y):
+        n = Node(x, y)
+        c.add_node(n)
+
+    return c
+
+
+def array_to_curve(*args):
+    """
+    Convert a numpy array to a cdtw.Curve object.
+
+    Creates a new Curve object from a np.ndarray containing (x,y) coordinates. This function can either take two arrays
+    (ie separate x and y) or a single array where the first column is x and the second column is y.
+
+    Parameters:
+    x (np.ndarray): the array containing x coordinates (floats)
+    y (np.ndarray): the array containing y coordinates (floats)
+     - OR -
+    xy_list (np.ndarray): the array containing the (x,y) coordinates (floats).
+
+    Returns:
+    c (cdtw.Curve): the curve created from the text file.
+    """
+
+    # enforce all inputs are lists
+    if not all(isinstance(i, np.ndarray) for i in args):
+        raise ValueError("All inputs must be lists.")
+
+    len_args = len(args)
+
+    # check DF type; must be pandas or pyspark
+    if len_args == 2:
+        x = args[0]
+        y = args[1]
+    elif len_args == 1:
+        x = args[0][:, 0]
+        y = args[0][:, 1]
+    else:
+        raise ValueError("Input must either be two lists of x and y, or a single list containing both.")
+
+    # enforce all x,y coords are numbers
+    if not all(isinstance(i, numbers.Number) for i in x):
+        raise ValueError("All x-values must be numbers.")
+    elif not all(isinstance(i, numbers.Number) for i in y):
+        raise ValueError("All y-values must be numbers.")
+
+    # create the curve object
+    c = Curve([])
+
+    for x, y in zip(x, y):
+        n = Node(x, y)
+        c.add_node(n)
+
+    return c
+
+
 # Main function to perform standard CDTW. This is a wrapper to _cdtw.
 def cdtw(c1, c2, interp=0.3, num_steiner=5, r=100):
     """
@@ -347,7 +498,7 @@ def cdtw(c1, c2, interp=0.3, num_steiner=5, r=100):
     Parameters:
     c1 (cdtw.Curve): the first curve to perform CDTW on.
     c2 (cdtw.Curve): the second curve to perform CDTW on.
-    interp (float): the interpolation factor for the curves. Higher is more compressed.
+    interp (float): the interpolation factor for the cuves. Higher is more compressed.
     num_steriners(int): the number of interpolating points per edge in the manifold. Higher is more accurate.
     r(int): the width of the Sakoe-Chiba band. Higher is more accurate.
 
