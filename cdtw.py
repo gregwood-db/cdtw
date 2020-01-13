@@ -359,7 +359,7 @@ def df_to_curve(df):
     c (cdtw.Curve): the curve created from the text file.
     """
 
-    df_type = type(df).__module__ + type(df).__name__
+    df_type = type(df).__module__ + '.' + type(df).__name__
 
     # check DF type; must be pandas or pyspark
     if df_type == "pandas.core.frame.DataFrame":
